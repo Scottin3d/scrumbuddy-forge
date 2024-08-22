@@ -1,6 +1,15 @@
-
-
-section{
+.button-bar{
     display: flex;
-    gap: 1rem;
+    flex-direction: row;
+}
+
+.button-bar > :last-child{
+    width: 25%;
+}
+.vote-options{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 0 8px;
 }

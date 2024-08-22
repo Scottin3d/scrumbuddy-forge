@@ -1,7 +1,14 @@
 <forge-card raised>
-    <section>
+    <div class="button-bar">
+    <div class="vote-options">
         @for (item of votingOptions; track $index; let index = $index) {
-            <forge-button variant="filled" theme="{{item === 'pass' ? 'secondary' : 'primary'}}" (click)="onClick(index)">{{item}}</forge-button>
+        <forge-button variant="filled" theme="{{item === 'pass' ? 'secondary' : 'primary'}}"
+            (click)="onClick(index)">{{item}}</forge-button>
         }
-    </section>
+    </div>
+    <div class="vote-options">
+        <forge-button variant="filled" theme="success">Call vote</forge-button>
+        <forge-button variant="outlined" theme="secondary">Open vote</forge-button>
+    </div>
+</div>
 </forge-card>

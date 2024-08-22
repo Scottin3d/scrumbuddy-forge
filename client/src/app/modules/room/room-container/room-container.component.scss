@@ -1,21 +1,26 @@
 :host{
     margin-top: 16px;
-    display: flex;
-    justify-content: center;
+
 }
 
-forge-scaffold{
-    gap: 1rem;
+.container{
+    margin: 16px;
+    display: grid;
+    grid-template-areas: 'user-list voting-options' 'user-list chart' 'user-list chart';
+    gap: 2rem;
 }
 
-section{
-    display: flex;
-    gap: 1rem;
-    justify-content: space-evenly;
-    align-items: center;
-    margin: 16px 0;
+.user-list{
+    grid-area: user-list;
+    min-width: 20dvw;
 }
 
-.host-card{
-    width: 200px;
+.voting-options{
+    grid-area: voting-options;
 }
+
+.chart{
+    grid-area: chart;
+}
+
+
