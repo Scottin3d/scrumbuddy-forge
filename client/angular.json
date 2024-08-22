@@ -44,9 +44,7 @@
             "scripts": [],
             "server": "src/main.server.ts",
             "prerender": true,
-            "ssr": {
-              "entry": "server.ts"
-            }
+            "ssr": false
           },
           "configurations": {
             "production": {
@@ -105,7 +103,9 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/apexcharts/dist/apexcharts.min.js"
+            ]
           }
         }
       }

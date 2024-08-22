@@ -3,6 +3,8 @@ import { BrowserModule, provideClientHydration } from '@angular/platform-browser
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+
+import { NgApexchartsModule } from "ng-apexcharts";
 @NgModule({
   declarations: [
     AppComponent
@@ -10,6 +12,7 @@ import { AppComponent } from './app.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    NgApexchartsModule,
   ],
   providers: [
     provideClientHydration()
