@@ -1,12 +1,14 @@
 {
   "name": "scrumbuddy-forge",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "env-cmd -f .env --use-shell \"npm run serve\"",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "serve": "ng serve --configuration=development --host=$ANGULAR_SERVER_HOST --port=$ANGULAR_SERVER_PORT",
+    "serve:ssr:client": "node dist/client/server/server.mjs"
   },
   "private": true,
   "dependencies": {
