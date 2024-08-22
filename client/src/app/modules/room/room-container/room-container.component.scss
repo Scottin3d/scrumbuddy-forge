@@ -3,3 +3,19 @@
     display: flex;
     justify-content: center;
 }
+
+forge-scaffold{
+    gap: 1rem;
+}
+
+section{
+    display: flex;
+    gap: 1rem;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 16px 0;
+}
+
+.host-card{
+    width: 200px;
+}

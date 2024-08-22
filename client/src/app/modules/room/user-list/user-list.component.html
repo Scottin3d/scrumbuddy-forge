@@ -1,0 +1,11 @@
+<forge-card>
+    <section>
+        @for (user of users; track $index;) {
+            <forge-card>
+                <div class="avatar" >
+                    <div class="initials">{{user.avatar}}</div>
+                </div>
+            </forge-card>
+        }
+    </section>
+</forge-card>

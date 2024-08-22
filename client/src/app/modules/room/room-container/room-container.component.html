@@ -1,1 +1,12 @@
-<app-voting-buttons></app-voting-buttons>
+
+<forge-scaffold>
+    <section slot="header">
+        <app-voting-buttons ></app-voting-buttons>
+        <forge-card raised class="host-card">
+            <forge-button>Call vote</forge-button>
+            <forge-button>Open vote</forge-button>
+        </forge-card>
+    </section>
+    <app-chart-display slot="body-left"></app-chart-display>
+    <app-user-list slot="body-right"></app-user-list>
+</forge-scaffold>
