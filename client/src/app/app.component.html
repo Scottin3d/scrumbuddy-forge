@@ -1,0 +1,18 @@
+<forge-scaffold>
+    <!-- header -->
+    <forge-app-bar slot="header" title-text="Tyler Forge™" theme="custom">
+        <forge-app-bar-menu-button slot="start"></forge-app-bar-menu-button>
+        <forge-icon slot="logo" name="forge_logo"></forge-icon>
+        <forge-app-bar-app-launcher-button slot="end" allow-more="true"></forge-app-bar-app-launcher-button>
+        <forge-app-bar-profile-button slot="end" avatar-text="Test User" full-name="First Last"
+            email="first.last@tylertech.com"></forge-app-bar-profile-button>
+    </forge-app-bar>
+    <!-- body -->
+    <section slot="body">
+        <router-outlet></router-outlet>
+    </section>
+    <!-- footer -->
+     <forge-toolbar inverted slot="footer">
+        <span slot="start">Scrumbuddy</span>
+     </forge-toolbar>
+</forge-scaffold>
