@@ -1,1 +1,7 @@
-<p>voting-buttons works!</p>
+<forge-card>
+    <div class="">
+        @for (value of votingOptions; track $index) {
+            <forge-button variant="filled">{{value}}</forge-button>
+        }
+    </div>
+</forge-card>
