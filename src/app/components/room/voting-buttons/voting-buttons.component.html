@@ -1,7 +1,14 @@
 <forge-card>
-    <div class="">
-        @for (value of votingOptions; track $index) {
-            <forge-button variant="filled">{{value}}</forge-button>
-        }
-    </div>
+    <section>
+
+        <div class="voting-options">
+            @for (value of votingOptions; track $index) {
+                <forge-button variant="filled">{{value}}</forge-button>
+            }
+        </div>
+        <div class="controls">
+            <forge-button variant="filled" theme="success">Call vote</forge-button>
+            <forge-button variant="outlined" theme="secondary">Open vote</forge-button>
+        </div>
+    </section>
 </forge-card>
