@@ -13,4 +13,10 @@ const forgeModules = [ ForgeButtonModule, ForgeCardModule];
 export class VotingButtonsComponent {
   public votingOptions = ['1', '2', '3', '5', '8', '13', '21', '34', '55', '89', 'pass'];
 
+  public selectedIndex = -1;
+
+  public onVoteClick(index: number): void {
+    this.selectedIndex = index;
+    console.log('Voted for', this.votingOptions[index]);
+  }
 }

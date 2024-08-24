@@ -2,8 +2,8 @@
     <section>
 
         <div class="voting-options">
-            @for (value of votingOptions; track $index) {
-                <forge-button variant="filled">{{value}}</forge-button>
+            @for (value of votingOptions; track $index; let i = $index) {
+                <forge-button variant="filled" [theme]="selectedIndex === i ? 'success' : 'primary'" (click)="onVoteClick(i)">{{value}}</forge-button>
             }
         </div>
         <div class="controls">
