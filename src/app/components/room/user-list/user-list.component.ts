@@ -1,31 +1,33 @@
-import { NgStyle } from '@angular/common';
+import { AsyncPipe, NgIf, NgStyle } from '@angular/common';
 import { Component } from '@angular/core';
 import { ForgeButtonModule, ForgeCardModule, ForgeIconModule } from '@tylertech/forge-angular';
 import { IconRegistry } from '@tylertech/forge';
 import { tylIconCheckCircle, tylIconRadioButtonUnchecked } from '@tylertech/tyler-icons/standard';
+import { RoomService } from '../../../shared/services/room.service';
+import { IUser } from '../../../shared/models/IUser';
 const forgeModules = [ ForgeButtonModule, ForgeCardModule, ForgeIconModule];
 
 
 @Component({
   selector: 'app-user-list',
   standalone: true,
-  imports: [...forgeModules, NgStyle],
+  imports: [...forgeModules, NgStyle, NgIf, AsyncPipe],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.scss'
 })
 export class UserListComponent {
   users: IUser[] = [
-    { name: 'John Doe', uid: '1', avatar: 'JD', hasVoted: true },
-    { name: 'Janasdasdasdasde Doe', uid: '2', avatar: 'JD', hasVoted: true },
-    { name: 'John Smith', uid: '3', avatar: 'JS', hasVoted: false },
-    { name: 'Jane Smith', uid: '4', avatar: 'JS', hasVoted: true },
-    { name: 'Jane White', uid: '10', avatar: 'JW', hasVoted: false },
+    { name: 'John Doe', uid: '1', avatar: 'JD', vote: 2 },
+    { name: 'Janasdasdasdasde Doe', uid: '2', avatar: 'JD', vote: 2 },
+    { name: 'John Smith', uid: '3', avatar: 'JS', vote: -1 },
+    { name: 'Jane Smith', uid: '4', avatar: 'JS', vote: 2 },
+    { name: 'Jane White', uid: '10', avatar: 'JW', vote: -1 },
   ];
 
   colors = ['blue', 'green', 'red', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'white'];
 
 
-  constructor() {
+  constructor(public roomService: RoomService) {
     IconRegistry.define([tylIconCheckCircle, tylIconRadioButtonUnchecked]);
   }
   getColor(index: number): string {
@@ -33,10 +35,4 @@ export class UserListComponent {
   }
 }
 
-export interface IUser {
-  name: string;
-  uid: string;
-  avatar: string;
-  hasVoted: boolean;
 
-}

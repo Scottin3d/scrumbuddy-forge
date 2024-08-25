@@ -21,7 +21,7 @@ export class VotingButtonsComponent {
 
   public onVoteClick(index: number): void {
     this.selectedIndex = index;
-    console.log('Voted for', this.votingOptions[index]);
+    this.roomService.vote(index);
   }
 
   public onCallVoteClick(): void {
