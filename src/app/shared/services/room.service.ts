@@ -2,7 +2,7 @@ import { inject, Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, isObservable, map, Observable, of, take, tap } from 'rxjs';
 import { IUser } from '../models/IUser';
 import { Auth, Unsubscribe } from '@angular/fire/auth';
-import { collection, doc, Firestore, onSnapshot, query, updateDoc } from '@angular/fire/firestore';
+import { collection, doc, Firestore, getDocs, onSnapshot, query, updateDoc } from '@angular/fire/firestore';
 import { IRoom } from '../models/IRoom';
 
 @Injectable({
@@ -12,6 +12,7 @@ export class RoomService implements OnDestroy{
   private auth = inject(Auth);
   private firestore = inject(Firestore);
 
+  private _validRoom: BehaviorSubject<IRoom> = new BehaviorSubject<IRoom>(null);
   public room$: Observable<IRoom> = of({} as IRoom);
   public users$: BehaviorSubject<IUser[]> = new BehaviorSubject<IUser[]>([]);
   public amHost$: Observable<boolean> = of(false);
@@ -89,4 +90,24 @@ export class RoomService implements OnDestroy{
     const q = query(collection(this.firestore, 'rooms', 'ikIdXTayNrWOYxQVIoLN8ExHF9J2', 'users'));
 
   }
+
+  public async validateRoomCode(roomCode: string): Promise<boolean> {
+    const querySnapshot = await getDocs(collection(this.firestore, 'rooms'));
+    const regex = /^[a-zA-Z0-9]{4}$/;
+    let isValidRoom = false;
+    querySnapshot.forEach((doc) => {
+        const room : IRoom = doc.data() as IRoom;
+        if (
+            room.roomCode.trim().toLocaleLowerCase() === roomCode.trim().toLocaleLowerCase() &&
+            regex.test(roomCode)
+        ) {
+            isValidRoom = true;
+            this._validRoom.next(room);
+            // break foreach
+            return;
+        }
+    });
+    this._validRoom.next(null);
+    return isValidRoom;
+}
 }
