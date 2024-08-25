@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { ForgeButtonModule, ForgeCardModule } from '@tylertech/forge-angular';
 import { RoomService } from '../../../shared/services/room.service';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgIf } from '@angular/common';
 
 const forgeModules = [ ForgeButtonModule, ForgeCardModule];
 
 @Component({
   selector: 'app-voting-buttons',
   standalone: true,
-  imports: [...forgeModules, AsyncPipe],
+  imports: [...forgeModules, AsyncPipe, NgIf],
   templateUrl: './voting-buttons.component.html',
   styleUrl: './voting-buttons.component.scss'
 })

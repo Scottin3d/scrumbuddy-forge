@@ -1,27 +1,32 @@
 <ng-container *ngIf="{
     users: roomService.users$| async,
+    isEditing: isEditing | async,
 } as page">
-<forge-card raised>
-    <div class="user-list">
-        <h2>Voters</h2>
-        @for (user of page.users; track $index; let i = $index) {
+    <forge-card raised>
+        <div class="user-list">
+            <h2>Voters</h2>
+            @for (user of page.users; track $index; let i = $index) {
             <div class="user-card">
                 <div class="avatar" [ngStyle]="{'background-color': getColor(i)}">{{user.avatar}}</div>
-                <div>{{user.name}}</div>
-                @if(user.vote !== -1){
-                    <forge-icon class="success" name="check_circle"></forge-icon>
+                @if(page.isEditing && user.uid === '1'){
+                <forge-text-field >
+                    <label>{{user.name}}</label>
+                    <input type="text" id="nameField"/>
+                </forge-text-field>
+
+                <forge-icon-button (click)="onNameEditConfirmClicked()" aria-label="Filled icon button">
+                    <forge-icon name="check_circle"></forge-icon>
+                </forge-icon-button>
                 }@else{
-                    <forge-icon name="radio_button_unchecked"></forge-icon>
+                <div (dblclick)="onToggleEdit(i)">{{user.name}}</div>
+                }
+                @if(user.vote !== -1){
+                <forge-icon class="success" name="check_circle"></forge-icon>
+                }@else{
+                <forge-icon name="radio_button_unchecked"></forge-icon>
                 }
             </div>
-        }
-        <h2>Spectators</h2>
-        @for (user of users; track $index; let i  = $index) {
-            <div class="user-card Spectators">
-                <div class="avatar" [ngStyle]="{'background-color': getColor(i)}">{{user.avatar}}</div>
-                <div>{{user.name}}</div>
-            </div>
-        }
-    </div>
-</forge-card>
+            }
+        </div>
+    </forge-card>
 </ng-container>

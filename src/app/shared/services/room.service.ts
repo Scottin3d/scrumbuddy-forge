@@ -1,8 +1,9 @@
 import { inject, Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, map, Observable, of, take, tap } from 'rxjs';
+import { BehaviorSubject, isObservable, map, Observable, of, take, tap } from 'rxjs';
 import { IUser } from '../models/IUser';
 import { Auth, Unsubscribe } from '@angular/fire/auth';
 import { collection, doc, Firestore, onSnapshot, query, updateDoc } from '@angular/fire/firestore';
+import { IRoom } from '../models/IRoom';
 
 @Injectable({
   providedIn: 'root'
@@ -11,16 +12,14 @@ export class RoomService implements OnDestroy{
   private auth = inject(Auth);
   private firestore = inject(Firestore);
 
-  public isVoteOpen: Observable<boolean> = of(true);
-
-  public roomSnapshot$: Observable<IRoom> = of({} as IRoom);
+  public room$: Observable<IRoom> = of({} as IRoom);
   public users$: BehaviorSubject<IUser[]> = new BehaviorSubject<IUser[]>([]);
+  public amHost$: Observable<boolean> = of(false);
   private roomUnsubscribe: Unsubscribe = () => { };
   private usersUnsubscribe: Unsubscribe = () => { };
 
   constructor() {
     this.getRoomSnapShot();
-
     this.users$.subscribe((users) => console.log(users));
   }
 
@@ -30,21 +29,23 @@ export class RoomService implements OnDestroy{
   }
 
   public openVote(): void {
-    this.isVoteOpen = of(true);
     this.users$.pipe(
       take(1),
       tap(async (users) => {
         users.forEach((user) => user.vote = -1);
 
         await updateDoc(doc(this.firestore, 'rooms', 'ikIdXTayNrWOYxQVIoLN8ExHF9J2'), {
-          users: users
+          users: users,
+          isVoteOpen: true
         });
       })
     ).subscribe();
   }
 
   public closeVote(): void {
-    this.isVoteOpen = of(false);
+    updateDoc(doc(this.firestore, 'rooms', 'ikIdXTayNrWOYxQVIoLN8ExHF9J2'), {
+      isVoteOpen: false
+    });
   }
 
   public async vote(vote: number): Promise<void> {
@@ -74,22 +75,18 @@ export class RoomService implements OnDestroy{
       (doc) => {
         let room: IRoom = doc.data() as IRoom;
         room.uid = doc.id;
-        this.roomSnapshot$ = of(room);
+        this.room$ = of(room);
 
+        // get users
         this.users$.next(room.users as IUser[]);
+
+        // determine host
+        // this.amHost$ = this.auth.currentUser?.uid === room.host ? of(true) : of(false);
+        this.amHost$ = of(true);
       }
     );
 
     const q = query(collection(this.firestore, 'rooms', 'ikIdXTayNrWOYxQVIoLN8ExHF9J2', 'users'));
 
   }
-}
-
-export interface IRoom {
-  isVoteOpen: boolean;
-  uid: string;
-  host: string;
-  name: string;
-  roomCode: string;
-  users: IUser[];
 }
