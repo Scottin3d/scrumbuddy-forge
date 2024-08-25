@@ -4,5 +4,8 @@ import { routes } from './app.routes';
 
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes)]
+  providers: [
+    provideFiebaseApp(() => initializeApp(firebaseConfig)),
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(routes)]
 };
