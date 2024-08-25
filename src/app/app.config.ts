@@ -5,7 +5,7 @@ import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideFiebaseApp(() => initializeApp(firebaseConfig)),
+    provideFiebaseApp(() => initializeApp()),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes)]
 };
