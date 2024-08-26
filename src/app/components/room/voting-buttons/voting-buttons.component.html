@@ -4,7 +4,6 @@
 } as page">
 
     <forge-card>
-        <section>
             <div class="voting-options">
                 @for (value of votingOptions; track $index; let i = $index) {
                     <forge-button variant="filled" [theme]="selectedIndex === i ? 'success' : 'primary'"
@@ -17,6 +16,5 @@
                     <forge-button variant="filled" theme="secondary" (click)="onopenVoteClick()" [disabled]="page.room?.isVoteOpen">Open vote</forge-button>
                 </div>
             }
-        </section>
     </forge-card>
 </ng-container>

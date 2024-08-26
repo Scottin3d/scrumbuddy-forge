@@ -8,18 +8,8 @@
             @for (user of page.users; track $index; let i = $index) {
             <div class="user-card">
                 <div class="avatar" [ngStyle]="{'background-color': getColor(i)}">{{user.avatar}}</div>
-                @if(page.isEditing && user.uid === '1'){
-                <forge-text-field >
-                    <label>{{user.name}}</label>
-                    <input type="text" id="nameField"/>
-                </forge-text-field>
+                <div class="user-name">{{user.name}}</div>
 
-                <forge-icon-button (click)="onNameEditConfirmClicked()" aria-label="Filled icon button">
-                    <forge-icon name="check_circle"></forge-icon>
-                </forge-icon-button>
-                }@else{
-                <div (dblclick)="onToggleEdit(i)">{{user.name}}</div>
-                }
                 @if(user.vote !== -1){
                 <forge-icon class="success" name="check_circle"></forge-icon>
                 }@else{

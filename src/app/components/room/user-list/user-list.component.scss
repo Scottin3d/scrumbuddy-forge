@@ -1,5 +1,5 @@
 :host{
-    width: 400px;
+    // width: 400px;
 }
 
 .user-list{
@@ -26,6 +26,10 @@
     margin-left: auto;
 }
 
+.user-card > :nth-of-type(2){
+    flex-shrink: 5;
+}
+
 .avatar{
     width: 35px;
     height: 35px;
@@ -35,6 +39,11 @@
     align-items: center;
     color: white;
     font-weight: 300;
+}
+
+.user-name{
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
 }
 
 .success{
