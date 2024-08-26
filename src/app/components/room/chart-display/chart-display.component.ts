@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ForgeCardModule } from '@tylertech/forge-angular';
-import { ApexYAxis, NgApexchartsModule } from "ng-apexcharts";
+import { ApexLegend, ApexStroke, ApexTooltip, ApexYAxis, NgApexchartsModule } from "ng-apexcharts";
 
 import {
   ChartComponent,
@@ -11,6 +11,9 @@ import {
   ApexFill,
   ApexDataLabels,
 } from 'ng-apexcharts';
+import { RoomService } from '../../../shared/services/room.service';
+import { shareReplay } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 
 const forgeModules = [ForgeCardModule];
@@ -22,7 +25,10 @@ const forgeModules = [ForgeCardModule];
   templateUrl: './chart-display.component.html',
   styleUrl: './chart-display.component.scss'
 })
-export class ChartDisplayComponent {
+export class ChartDisplayComponent{
+  // dependency injection
+  private roomService = inject(RoomService);
+
   public votingOptions = ['1', '2', '3', '5', '8', '13', '21', '34', '55', '89', 'pass'];
 
   public title: ApexTitleSubtitle = {
@@ -30,11 +36,17 @@ export class ChartDisplayComponent {
   };
   public series: ApexAxisChartSeries  = [
     {
-      data: [0,1,2,5,0,0,0,0,0,0]
+      name: 'Votes',
+      type: 'bar',
+      data: []
+    },
+    {
+      type: 'line',
+      data: []
     }
   ];
   public chart: ApexChart = {
-    type: 'bar',
+    type: 'line',
     height: 350
   };
 
@@ -44,8 +56,50 @@ export class ChartDisplayComponent {
 
   public yAxis: ApexYAxis = {
     stepSize: 1,
+    min: 0,
+    max: 10,
     title: {
       text: 'Votes'
     }
   };
+
+  public stroke: ApexStroke = {
+    width: [0, 3, 5],
+    curve: 'smooth'
+  };
+
+  public dataLabels: ApexDataLabels = {
+    enabled: false
+  };
+
+  public legend: ApexLegend = {
+    show: false
+  };
+
+  public toolTip: ApexTooltip = {
+    enabled: false
+  };
+
+  constructor() {
+    this.roomService.votes$.pipe(takeUntilDestroyed()).subscribe((votes) => {
+      // strip the first element of votes
+      votes.shift();
+      this.series = [
+        {
+          name: 'Votes',
+          type: 'bar',
+          data: votes
+        },
+        {
+          type: 'line',
+          data: votes
+        }
+      ];
+    });
+
+    this.roomService.users$.pipe(takeUntilDestroyed()).subscribe((users) => {
+      // set the value to user count or min of 5 whichever is greater
+      this.yAxis.max = users.length < 5 ? 5 : users.length;
+    });
+  }
 }

@@ -15,6 +15,7 @@ export class RoomService implements OnDestroy{
   private _validRoom: BehaviorSubject<IRoom> = new BehaviorSubject<IRoom>(null);
   public room$: Observable<IRoom> = of({} as IRoom);
   public users$: BehaviorSubject<IUser[]> = new BehaviorSubject<IUser[]>([]);
+  public votes$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]); // a distribution of votes
   public amHost$: Observable<boolean> = of(false);
   private roomUnsubscribe: Unsubscribe = () => { };
   private usersUnsubscribe: Unsubscribe = () => { };
@@ -22,6 +23,7 @@ export class RoomService implements OnDestroy{
   constructor() {
     this.getRoomSnapShot();
     this.users$.subscribe((users) => console.log(users));
+    this.votes$.subscribe((votes) => console.log(votes));
   }
 
   ngOnDestroy(): void {
@@ -33,7 +35,7 @@ export class RoomService implements OnDestroy{
     this.users$.pipe(
       take(1),
       tap(async (users) => {
-        users.forEach((user) => user.vote = -1);
+        users.forEach((user) => user.vote = 0);
 
         await updateDoc(doc(this.firestore, 'rooms', 'ikIdXTayNrWOYxQVIoLN8ExHF9J2'), {
           users: users,
@@ -84,6 +86,15 @@ export class RoomService implements OnDestroy{
         // determine host
         // this.amHost$ = this.auth.currentUser?.uid === room.host ? of(true) : of(false);
         this.amHost$ = of(true);
+
+
+        const votingOptions = ['pass', '1', '2', '3', '5', '8', '13', '21', '34', '55', '89'];
+        // get votes
+        // get votes from users, and distribute them compared to the voting options
+        // user vote is index of the voting options
+        const votes = room.users.map((user) => user.vote);
+        const distribution = votingOptions.map((option) => votes.filter((vote) => vote === votingOptions.indexOf(option)).length);
+        this.votes$.next(distribution);
       }
     );
 

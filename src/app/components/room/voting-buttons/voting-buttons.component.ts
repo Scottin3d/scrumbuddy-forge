@@ -13,7 +13,7 @@ const forgeModules = [ ForgeButtonModule, ForgeCardModule];
   styleUrl: './voting-buttons.component.scss'
 })
 export class VotingButtonsComponent {
-  public votingOptions = ['1', '2', '3', '5', '8', '13', '21', '34', '55', '89', 'pass'];
+  public votingOptions = ['pass', '1', '2', '3', '5', '8', '13', '21', '34', '55', '89'];
 
   public selectedIndex = -1;
 
@@ -29,7 +29,7 @@ export class VotingButtonsComponent {
   }
 
   public onopenVoteClick(): void {
-    this.selectedIndex = -1;
+    this.selectedIndex = 0;
     this.roomService.openVote();
   }
 }
