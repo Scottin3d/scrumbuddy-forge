@@ -26,12 +26,8 @@
     margin-left: auto;
 }
 
-.user-card > :nth-of-type(2){
-    flex-shrink: 5;
-}
-
 .avatar{
-    width: 35px;
+    min-width: 35px;
     height: 35px;
     border-radius: 50%;
     display: flex;
@@ -43,6 +39,7 @@
 
 .user-name{
     text-wrap: nowrap;
+    overflow: hidden;
     text-overflow: ellipsis;
 }
 
