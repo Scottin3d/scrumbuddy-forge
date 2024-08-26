@@ -1,1 +1,35 @@
-<p>home works!</p>
+<forge-card raised [formGroup]="joinRoomFormControl">
+    <section class="card-header">
+        <h3>Let's go... <span aria-label="fire emoji">🔥</span></h3>
+    </section>
+    <section class="card-content">
+        <forge-text-field required="true"
+            [theme]="(displayNameControl.valid || displayNameControl.untouched)? 'primary' : 'warning'">
+            <label for="display-name">Display name</label>
+            <input type="text" formControlName="displayNameControl" id="display-name">
+            @if(displayNameControl.invalid){
+            <span slot="helper-text">{{displayNameErrorMessage()}}</span>
+            }
+        </forge-text-field>
+        <forge-text-field required="true"
+            [theme]="(roomCodeControl.valid || roomCodeControl.untouched)? 'primary' : 'warning'">
+            <label for="room-code">Room code</label>
+            <input type="text" formControlName="roomCodeControl" id="room-code">
+            @if(roomCodeControl.invalid || roomCodeControl.pending){
+                <span slot="helper-text">{{roomCodeErrorMessage()}}</span>
+            }
+            @if((roomCodeControl.invalid || roomCodeControl.pending) && roomCodeControl.touched){
+                <forge-icon theme="warning" name="emoticon_sad" slot="trailing"></forge-icon>
+            }
+            @else if(roomCodeControl.valid){
+                <forge-icon theme="success" name="emoticon_happy" slot="trailing"></forge-icon>
+                <span slot="helper-text">Room code is valid!</span>
+            }
+
+        </forge-text-field>
+    </section>
+    <section class="card-actions">
+        <forge-button type="submit" variant="filled" [disabled]="joinRoomFormControl.invalid"
+            (click)="onJoinClick()">Join</forge-button>
+    </section>
+</forge-card>

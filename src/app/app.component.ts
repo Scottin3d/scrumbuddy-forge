@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Auth, signInAnonymously } from '@angular/fire/auth';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { ForgeAppBarMenuButtonModule, ForgeAppBarModule, ForgeAppBarProfileButtonModule, ForgeButtonModule, ForgeIconModule, ForgeScaffoldModule, ForgeToolbarModule } from '@tylertech/forge-angular';
 
 const forgeModules = [
@@ -16,7 +16,7 @@ const forgeModules = [
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, ...forgeModules],
+  imports: [RouterOutlet, RouterLink, ...forgeModules],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

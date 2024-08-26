@@ -1,0 +1,30 @@
+:host{
+    display: flex;
+    justify-content: center;
+    padding-top: 10dvh;
+}
+
+forge-card{
+    height: 50%;
+}
+
+forge-card > section{
+    margin: 16px 0;
+}
+.card-header{
+}
+
+.card-content{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.card-content > * {
+    margin-bottom: auto;
+}
+
+.card-actions{
+    display: flex;
+    justify-content: end;
+}
