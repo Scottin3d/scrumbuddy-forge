@@ -10,7 +10,7 @@
                 <div class="avatar" [ngStyle]="{'background-color': getColor(i)}">{{user.avatar}}</div>
                 <div class="user-name">{{user.name}}</div>
 
-                @if(user.vote !== -1){
+                @if(user.vote !== 0){
                 <forge-icon class="success" name="check_circle"></forge-icon>
                 }@else{
                 <forge-icon name="radio_button_unchecked"></forge-icon>

@@ -2,19 +2,18 @@ import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class RoutingService {
+    private router = inject(Router);
 
-  private router = inject(Router);
+    constructor() { }
 
-  constructor() { }
+    public routeToHome() {
+        this.router.navigate(['/home']);
+    }
 
-  public routeToHome() {
-    this.router.navigate(['/home']);
-  }
-
-  public routeToRoomById(id: string) {
-    this.router.navigate(['/room', id]);
-  }
+    public routeToRoomById(id: string) {
+        this.router.navigate(['/room', id]);
+    }
 }
