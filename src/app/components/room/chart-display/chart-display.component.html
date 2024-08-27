@@ -1,10 +1,13 @@
-<forge-card raised>
+<forge-card>
     @if(!(this.roomService.room$ | async).isVoteOpen){
         <div class="vote-closed">
             <h1>Vote Closed</h1>
             {{score | async}}
         </div>
     }
+</forge-card>
+
+<forge-card raised>
     <!-- <img src="bar-chart.png" alt=""> -->
     <apx-chart
     [series]="series"
