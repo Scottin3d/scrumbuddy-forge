@@ -93,10 +93,13 @@ export class HomeComponent {
 
     public onJoinClick() {
         const displayName = this.displayNameControl.value;
+        // split the display name by space, if there is more than 2 words the avatar is the first letter of the first two words, else, the avatar is the first two letters of the display name
+        const avatar = displayName.split(' ').length > 1 ? displayName.split(' ')[0].charAt(0) + displayName.split(' ')[1].charAt(0) : displayName.slice(0, 2);
+
         const user: IUser = {
             name: displayName,
             uid: this.auth.currentUser.uid,
-            avatar: displayName.slice(0, 2).toUpperCase(),
+            avatar: avatar.toUpperCase(),
             vote: 0
         };
 
