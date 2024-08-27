@@ -1,7 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { Auth, signInAnonymously } from '@angular/fire/auth';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { ForgeAppBarMenuButtonModule, ForgeAppBarModule, ForgeAppBarProfileButtonModule, ForgeButtonModule, ForgeIconModule, ForgeScaffoldModule, ForgeToolbarModule } from '@tylertech/forge-angular';
+import { ForgeAppBarMenuButtonModule, ForgeIconButtonModule, ForgeAppBarModule, ForgeAppBarProfileButtonModule, ForgeButtonModule, ForgeIconModule, ForgeScaffoldModule, ForgeToolbarModule } from '@tylertech/forge-angular';
+import { RoomService } from './shared/services/room.service';
+import { RoutingService } from './shared/services/routing.service';
 
 const forgeModules = [
     ForgeButtonModule,
@@ -10,21 +12,27 @@ const forgeModules = [
     ForgeToolbarModule,
     ForgeAppBarMenuButtonModule,
     ForgeAppBarProfileButtonModule,
-    ForgeIconModule
+    ForgeIconModule,
+    ForgeIconButtonModule
 ];
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, RouterLink, ...forgeModules],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+    selector: 'app-root',
+    standalone: true,
+    imports: [RouterOutlet, RouterLink, ...forgeModules],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  private auth = inject(Auth);
-  title = 'scrumbuddy-forge';
+    private auth = inject(Auth);
+    private routingService = inject(RoutingService);
+    title = 'scrumbuddy-forge';
 
-  constructor() {
-    signInAnonymously(this.auth);
-  }
+    constructor() {
+        signInAnonymously(this.auth);
+    }
+
+    public onLogoClick(): void {
+        this.routingService.routeToHome();
+    }
 }

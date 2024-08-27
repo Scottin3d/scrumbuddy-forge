@@ -59,7 +59,6 @@ export class RoomService implements OnDestroy {
             take(1),
             tap(async (users) => {
                 const user = users.find((u) => u.uid === this.auth.currentUser?.uid);
-                // const user = users.find((u) => u.uid === '1');
                 if (user) {
                     user.vote = vote;
                 } else {
@@ -85,8 +84,8 @@ export class RoomService implements OnDestroy {
                 this.users$.next(room.users as IUser[]);
 
                 // determine host
-                // this.amHost$ = this.auth.currentUser?.uid === room.host ? of(true) : of(false);
-                this.amHost$ = of(true);
+                this.amHost$ = this.auth.currentUser?.uid === room.host ? of(true) : of(false);
+                // this.amHost$ = of(true);
 
 
                 const votingOptions = ['pass', '1', '2', '3', '5', '8', '13', '21', '34', '55', '89'];

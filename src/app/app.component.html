@@ -1,6 +1,17 @@
 <forge-scaffold>
     <!-- header -->
-    <forge-app-bar slot="header" title-text="Scrumbuddy" [routerLink]="['/home']">
+    <forge-app-bar slot="header" title-text="Scrumbuddy">
+        <forge-icon-button slot="logo" (click)="onLogoClick()">
+            <svg  xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chart-histogram" width="36" height="36" viewBox="0 0 28 28" stroke-width="1.1" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M3 3v18h18" />
+                <path d="M20 18v3" />
+                <path d="M16 16v5" />
+                <path d="M12 13v8" />
+                <path d="M8 16v5" />
+                <path d="M3 11c6 0 5 -5 9 -5s3 5 9 5" />
+            </svg>
+        </forge-icon-button>
         <forge-app-bar-profile-button slot="end" avatar-text="Test User" full-name="First Last"
             email="first.last@tylertech.com"></forge-app-bar-profile-button>
     </forge-app-bar>

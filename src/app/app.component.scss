@@ -5,6 +5,12 @@ section {
     justify-content: center;
 }
 
+forge-icon-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 forge-app-bar::part(title) {
     cursor: pointer;
 }
