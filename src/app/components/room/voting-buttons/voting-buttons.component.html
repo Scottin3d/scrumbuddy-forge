@@ -7,15 +7,21 @@
         <div class="card">
             <div class="voting-options">
                 @for (value of votingOptions; track $index; let i = $index) {
-                    <forge-button variant="filled" [theme]="selectedIndex === i ? 'success' : 'primary'"
-                    (click)="onVoteClick(i)" [disabled]="!page.room?.isVoteOpen">{{value}}</forge-button>
+                <forge-button 
+                    variant="filled"
+                    [theme]="selectedIndex === i ? 'success' : (i === 0) ? 'secondary' : 'primary'"
+                    (click)="onVoteClick(i)" 
+                    [disabled]="!page.room?.isVoteOpen">
+                    {{value}}</forge-button>
                 }
             </div>
             @if(page.amHost){
-                <div class="controls">
-                    <forge-button variant="filled" theme="success" (click)="onCallVoteClick()" [disabled]="!page.room?.isVoteOpen">Call vote</forge-button>
-                    <forge-button variant="filled" theme="secondary" (click)="onopenVoteClick()" [disabled]="page.room?.isVoteOpen">Open vote</forge-button>
-                </div>
+            <div class="controls">
+                <forge-button variant="filled" theme="success" (click)="onCallVoteClick()"
+                    [disabled]="!page.room?.isVoteOpen">Call vote</forge-button>
+                <forge-button variant="filled" theme="secondary" (click)="onopenVoteClick()"
+                    [disabled]="page.room?.isVoteOpen">Open vote</forge-button>
+            </div>
             }
         </div>
     </forge-card>

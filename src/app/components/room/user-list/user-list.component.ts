@@ -1,13 +1,12 @@
 import { AsyncPipe, NgIf, NgStyle } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { ForgeButtonModule, ForgeCardModule, ForgeIconButtonModule, ForgeIconModule, ForgeTextFieldModule } from '@tylertech/forge-angular';
-import { IconRegistry } from '@tylertech/forge';
-import { tylIconCheckCircle, tylIconRadioButtonUnchecked } from '@tylertech/tyler-icons/standard';
-import { RoomService } from '../../../shared/services/room.service';
-import { IUser } from '../../../shared/models/IUser';
-import { BehaviorSubject, take, tap } from 'rxjs';
 import { Auth } from '@angular/fire/auth';
 import { FormControl, FormGroup, FormsModule } from '@angular/forms';
+import { IconRegistry } from '@tylertech/forge';
+import { ForgeButtonModule, ForgeCardModule, ForgeIconButtonModule, ForgeIconModule, ForgeTextFieldModule } from '@tylertech/forge-angular';
+import { tylIconCheckCircle, tylIconRadioButtonUnchecked } from '@tylertech/tyler-icons/standard';
+import { BehaviorSubject, take, tap } from 'rxjs';
+import { RoomService } from '../../../shared/services/room.service';
 
 
 const forgeModules = [ ForgeButtonModule, ForgeCardModule, ForgeIconModule, ForgeTextFieldModule, ForgeIconButtonModule];
