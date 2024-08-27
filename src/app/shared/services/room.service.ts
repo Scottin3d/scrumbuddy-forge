@@ -22,8 +22,9 @@ export class RoomService implements OnDestroy {
 
     constructor() {
         this.getRoomSnapShot();
-        this.users$.subscribe((users) => console.log(users));
-        this.votes$.subscribe((votes) => console.log(votes));
+        this.room$.subscribe((room) => console.log('room:' + room));
+        this.users$.subscribe((users) => console.log('users:' + users));
+        this.votes$.subscribe((votes) => console.log('votes: ' + votes));
     }
 
     ngOnDestroy(): void {
@@ -136,14 +137,20 @@ export class RoomService implements OnDestroy {
     }
 
     public async LeaveRoom(): Promise<void> {
-        // if room is empty, return
         this.room$.pipe(
             take(1),
             tap(async (room) => {
+                // if room is empty, return
                 if(room === null) return;
+
+                // remove user from room
                 const users = room.users.filter((user) => user.uid !== this.auth.currentUser?.uid);
+
+                // check if user is host, if so, assign to next user
+                const host = room.host === this.auth.currentUser?.uid ? users[0].uid : room.host;
                 await updateDoc(doc(this.firestore, 'rooms', 'ikIdXTayNrWOYxQVIoLN8ExHF9J2'), {
-                    users: users
+                    users: users,
+                    host: host
                 });
             })
         ).subscribe();
