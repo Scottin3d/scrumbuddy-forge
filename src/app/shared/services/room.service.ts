@@ -1,5 +1,5 @@
 import { inject, Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, isObservable, map, Observable, of, take, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, isObservable, map, Observable, of, take, tap } from 'rxjs';
 import { IUser } from '../models/IUser';
 import { Auth, Unsubscribe } from '@angular/fire/auth';
 import { collection, doc, Firestore, getDocs, onSnapshot, query, updateDoc } from '@angular/fire/firestore';
@@ -13,7 +13,7 @@ export class RoomService implements OnDestroy {
     private firestore = inject(Firestore);
 
     private _validRoom: BehaviorSubject<IRoom> = new BehaviorSubject<IRoom>(null);
-    public room$: Observable<IRoom> = of({} as IRoom);
+    public room$: BehaviorSubject<IRoom> = new BehaviorSubject<IRoom>(null);
     public users$: BehaviorSubject<IUser[]> = new BehaviorSubject<IUser[]>([]);
     public votes$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]); // a distribution of votes
     public amHost$: Observable<boolean> = of(false);
@@ -22,8 +22,8 @@ export class RoomService implements OnDestroy {
 
     constructor() {
         this.getRoomSnapShot();
-        this.room$.subscribe((room) => console.log('room:' + room));
-        this.users$.subscribe((users) => console.log('users:' + users));
+        this.room$.subscribe((room) => console.table(room));
+        this.users$.subscribe((users) => console.table(users));
         this.votes$.subscribe((votes) => console.log('votes: ' + votes));
     }
 
@@ -56,9 +56,9 @@ export class RoomService implements OnDestroy {
     public async vote(vote: number): Promise<void> {
         // this index of the vote options
 
-        this.users$.pipe(
+        combineLatest([this.users$, this.room$]).pipe(
             take(1),
-            tap(async (users) => {
+            tap(async ([users, room]) => {
                 const user = users.find((u) => u.uid === this.auth.currentUser?.uid);
                 if (user) {
                     user.vote = vote;
@@ -66,7 +66,7 @@ export class RoomService implements OnDestroy {
                     return;
                 }
 
-                await updateDoc(doc(this.firestore, 'rooms', 'ikIdXTayNrWOYxQVIoLN8ExHF9J2'), {
+                await updateDoc(doc(this.firestore, 'rooms', room.uid), {
                     users: users
                 });
             })
@@ -79,7 +79,7 @@ export class RoomService implements OnDestroy {
             (doc) => {
                 let room: IRoom = doc.data() as IRoom;
                 room.uid = doc.id;
-                this.room$ = of(room);
+                this.room$.next(room as IRoom);
 
                 // get users
                 this.users$.next(room.users as IUser[]);
@@ -148,6 +148,8 @@ export class RoomService implements OnDestroy {
 
                 // check if user is host, if so, assign to next user
                 const host = room.host === this.auth.currentUser?.uid ? users[0].uid : room.host;
+
+                // update doc
                 await updateDoc(doc(this.firestore, 'rooms', 'ikIdXTayNrWOYxQVIoLN8ExHF9J2'), {
                     users: users,
                     host: host

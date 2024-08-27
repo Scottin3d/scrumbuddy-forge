@@ -11,7 +11,6 @@ export const validRoomGuard: CanActivateFn = (route, state) => {
   return from(roomService.validateRoomCode(route.params['id'])).pipe(
     switchMap((exists) => {
         if (exists) {
-            console.log('room exists');
             return of(true);
         } else {
             routingService.routeToHome();
