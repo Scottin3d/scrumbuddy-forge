@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, HostListener, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { RoomService } from '../../../shared/services/room.service';
@@ -31,5 +31,8 @@ export class RoomContainerComponent {
         });
     }
 
-
+    @HostListener('window:beforeunload', ['$event'])
+    beforeunloadHandler(event) {
+        this.roomService.LeaveRoom();
+    }
 }
