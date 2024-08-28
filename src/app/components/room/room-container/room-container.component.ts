@@ -23,7 +23,7 @@ export class RoomContainerComponent {
                 // case event instanceof NavigationStart:
             if (event instanceof NavigationStart) {
                 if (event.url === '/home') {
-                    this.roomService.LeaveRoom();
+                    this.roomService.leaveRoom();
                 }
             }else if(event instanceof NavigationEnd){
                 this.roomService.openVote();
@@ -33,6 +33,6 @@ export class RoomContainerComponent {
 
     @HostListener('window:beforeunload', ['$event'])
     beforeunloadHandler(event) {
-        this.roomService.LeaveRoom();
+        this.roomService.leaveRoom();
     }
 }

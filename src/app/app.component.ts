@@ -34,6 +34,7 @@ const forgeModules = [
 })
 export class AppComponent {
   private auth = inject(Auth);
+  private roomService = inject(RoomService);
   private routingService = inject(RoutingService);
   title = 'scrumbuddy-forge';
 
@@ -44,6 +45,7 @@ export class AppComponent {
   }
 
   public onLogoClick(): void {
+    this.roomService.leaveRoom();
     this.routingService.routeToHome();
   }
 }

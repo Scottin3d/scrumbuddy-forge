@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { ForgeButtonModule, ForgeCardModule, ForgeIconModule, ForgeTextFieldModule } from '@tylertech/forge-angular';
+import { ForgeButtonModule, ForgeCardModule, ForgeIconModule, ForgeTabBarModule, ForgeTextFieldModule } from '@tylertech/forge-angular';
 import { Observable, from, map, merge } from 'rxjs';
 import { RoomService } from '../../services/room.service';
 import { RoutingService } from '../../services/routing.service';
@@ -10,8 +10,10 @@ import { IconRegistry } from '@tylertech/forge';
 import { tylIconEmoticonSad, tylIconEmoticonHappy } from '@tylertech/tyler-icons/extended';
 import { IUser } from '../../models/IUser';
 import { Auth } from '@angular/fire/auth';
+import { roomCodeValidator } from '../../validators/room-code.validator';
+import { IRoom } from '../../models/IRoom';
 
-const forgeModules = [ForgeCardModule, FormsModule, ForgeButtonModule, ForgeTextFieldModule, ForgeIconModule];
+const forgeModules = [ForgeTabBarModule, ForgeCardModule, FormsModule, ForgeButtonModule, ForgeTextFieldModule, ForgeIconModule];
 
 @Component({
     selector: 'app-home',
@@ -25,21 +27,23 @@ export class HomeComponent {
     private roomService = inject(RoomService);
     private auth = inject(Auth);
 
-    readonly joinRoomFormControl: FormGroup;
+    readonly roomFormControl: FormGroup;
     readonly displayNameControl: FormControl;
     readonly roomCodeControl: FormControl;
 
+    public activeTabIndex: number = 1;
     roomCodeErrorMessage = signal('');
     displayNameErrorMessage = signal('');
+    newRoomCode = signal('ABDC');
 
     constructor(
     ) {
         IconRegistry.define([tylIconEmoticonSad, tylIconEmoticonHappy]);
 
-        this.joinRoomFormControl = new FormGroup({
+        this.roomFormControl = new FormGroup({
             displayNameControl: new FormControl('', [Validators.required]),
             roomCodeControl: new FormControl('', {
-                asyncValidators: [this.roomCodeValidator.bind(this)],
+                asyncValidators: [roomCodeValidator.bind(this)],
                 validators: [
                     Validators.required,
                     Validators.pattern(/^[a-zA-Z0-9]{4}$/),
@@ -47,17 +51,17 @@ export class HomeComponent {
             }),
         });
 
-        this.displayNameControl = this.joinRoomFormControl.get(
+        this.displayNameControl = this.roomFormControl.get(
             'displayNameControl'
         ) as FormControl;
-
-        this.roomCodeControl = this.joinRoomFormControl.get('roomCodeControl') as FormControl;
+        this.roomCodeControl = this.roomFormControl.get('roomCodeControl') as FormControl;
 
         this.initDisplayNameErrorMessage();
         this.initRoomCodeErrorMessage();
+        this.initNewRoomCode();
     }
 
-    private initDisplayNameErrorMessage() {
+    private initDisplayNameErrorMessage(): void {
         merge(
             this.displayNameControl.statusChanges,
             this.displayNameControl.valueChanges
@@ -72,7 +76,7 @@ export class HomeComponent {
             );
     }
 
-    private initRoomCodeErrorMessage() {
+    private initRoomCodeErrorMessage(): void {
         merge(
             this.roomCodeControl.statusChanges,
             this.roomCodeControl.valueChanges
@@ -84,14 +88,22 @@ export class HomeComponent {
                         ? 'Room code is required'
                         : this.roomCodeControl.hasError('pattern')
                             ? 'Room code must be 4 characters'
-                            : this.roomCodeControl.hasError('validRoom')
+                            : this.roomCodeControl.hasError('validRoomCode')
                                 ? 'Room does not exist'
                                 : ''
                 )
             );
     }
 
-    public onJoinClick() {
+    private initNewRoomCode(): void {
+        this.roomService.generateRoomCode().then((roomCode) => this.newRoomCode.set(roomCode));
+    }
+
+    public onTabBarChange(event: CustomEvent): void {
+        this.activeTabIndex = event.detail.index;
+    }
+
+    public onJoinClick(): void {
         const displayName = this.displayNameControl.value;
         // split the display name by space, if there is more than 2 words the avatar is the first letter of the first two words, else, the avatar is the first two letters of the display name
         const avatar = displayName.split(' ').length > 1 ? displayName.split(' ')[0].charAt(0) + displayName.split(' ')[1].charAt(0) : displayName.slice(0, 2);
@@ -103,28 +115,31 @@ export class HomeComponent {
             vote: 0
         };
 
-        this.roomService.AddUserToRoom(user).then(() =>
+        this.roomService.joinRoom(this.roomCodeControl.value, user).then(() =>
             this.routingService.routeToRoomById(this.roomCodeControl.value));
     }
 
-    private roomCodeValidator(
-        control: AbstractControl
-    ): Observable<ValidationErrors | null> {
-        const roomCode = control.value;
-        return from(this.roomService.validateRoomCode(roomCode)).pipe(
-            map((isRoomValid) => {
-                console.log('is room valid', isRoomValid);
-                return isRoomValid ? null : { validRoom: true };
-            })
-        );
+    public onHostClick(): void {
+        const displayName = this.displayNameControl.value;
+        const avatar = displayName.split(' ').length > 1 ? displayName.split(' ')[0].charAt(0) + displayName.split(' ')[1].charAt(0) : displayName.slice(0, 2);
+        const user: IUser = {
+            name: displayName,
+            uid: this.auth.currentUser.uid,
+            avatar: avatar.toUpperCase(),
+            vote: 0
+        };
+
+        const room: IRoom = {
+            isVoteOpen: true,
+            host: user.uid,
+            roomCode: this.newRoomCode(),
+            users: [user],
+        }
+
+        this.roomService.createRoom(room).then(() =>
+            this.routingService.routeToRoomById(room.roomCode));
     }
+
 }
 
-export function length(length: number): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-        if (control.value.length !== length) {
-            return { length: { requiredLength: length, actualLength: control.value.length } };
-        }
-        return null;
-    };
-}
+
