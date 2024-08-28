@@ -14,6 +14,7 @@ import { Auth, Unsubscribe } from '@angular/fire/auth';
 import {
     addDoc,
     collection,
+    deleteDoc,
     doc,
     Firestore,
     getDoc,
@@ -179,12 +180,18 @@ export class RoomService implements OnDestroy {
                         (user) => user.uid !== this.auth.currentUser?.uid
                     );
 
-                    // check if user is host, if so, assign to next user
-                    // if no users, skip
-                    let host = '';
-                    if (users.length > 0) {
-                        host = room.host === this.auth.currentUser?.uid ? users[0].uid : room.host;
+                    // if no users, delete room
+                    if (users.length === 0) {
+                        this.deleteRoom();
+                        return;
                     }
+
+                    // check if user is host, if so, assign to next user
+                    let host = room.host;
+                    if (host === this.auth.currentUser?.uid) {
+                        host = users.length > 0 ? users[0].uid : null;
+                    }
+
                     // update doc
                     await updateDoc(
                         doc(this.firestore, 'rooms', room.roomCode),
@@ -196,6 +203,11 @@ export class RoomService implements OnDestroy {
                 })
             )
             .subscribe();
+
+        this.room$.next(null);
+        this.users$.next([]);
+        this.roomUnsubscribe();
+        this.usersUnsubscribe();
     }
 
     public async generateRoomCode(length: number = 4): Promise<string> {
@@ -242,5 +254,19 @@ export class RoomService implements OnDestroy {
                 })
             )
             .subscribe();
+    }
+
+    private deleteRoom(): void {
+        this.votes$.next([]);
+
+        this.users$.next([]);
+
+        let roomCode = this.room$.value.roomCode;
+        this.room$.next(null);
+
+        deleteDoc(doc(this.firestore, 'rooms', roomCode));
+
+        this.roomUnsubscribe();
+        this.usersUnsubscribe();
     }
 }
