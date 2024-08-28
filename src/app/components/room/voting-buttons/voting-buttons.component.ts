@@ -1,9 +1,8 @@
+import { AsyncPipe, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ForgeButtonModule, ForgeCardModule } from '@tylertech/forge-angular';
 import { RoomService } from '../../../shared/services/room.service';
-import { AsyncPipe, NgIf } from '@angular/common';
-import { take } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 const forgeModules = [ForgeButtonModule, ForgeCardModule];
 

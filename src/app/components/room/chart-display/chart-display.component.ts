@@ -1,20 +1,18 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ForgeCardModule } from '@tylertech/forge-angular';
 import { ApexLegend, ApexStroke, ApexTooltip, ApexYAxis, NgApexchartsModule } from "ng-apexcharts";
 
+import { AsyncPipe } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
-    ChartComponent,
     ApexAxisChartSeries,
     ApexChart,
-    ApexXAxis,
-    ApexTitleSubtitle,
-    ApexFill,
     ApexDataLabels,
+    ApexTitleSubtitle,
+    ApexXAxis
 } from 'ng-apexcharts';
+import { BehaviorSubject } from 'rxjs';
 import { RoomService } from '../../../shared/services/room.service';
-import { BehaviorSubject, shareReplay } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AsyncPipe } from '@angular/common';
 
 
 const forgeModules = [ForgeCardModule];

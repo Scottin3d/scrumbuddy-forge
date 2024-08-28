@@ -1,18 +1,7 @@
 import { inject, Injectable, OnDestroy } from '@angular/core';
-import {
-    BehaviorSubject,
-    combineLatest,
-    isObservable,
-    map,
-    Observable,
-    of,
-    take,
-    tap,
-} from 'rxjs';
-import { IUser } from '../models/IUser';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Auth, Unsubscribe } from '@angular/fire/auth';
 import {
-    addDoc,
     collection,
     deleteDoc,
     doc,
@@ -20,14 +9,20 @@ import {
     getDoc,
     getDocs,
     onSnapshot,
-    query,
     setDoc,
     Timestamp,
-    updateDoc,
-    where,
+    updateDoc
 } from '@angular/fire/firestore';
+import {
+    BehaviorSubject,
+    combineLatest,
+    Observable,
+    of,
+    take,
+    tap
+} from 'rxjs';
 import { IRoom } from '../models/IRoom';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { IUser } from '../models/IUser';
 
 @Injectable({
     providedIn: 'root',
