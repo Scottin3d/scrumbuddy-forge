@@ -27,6 +27,7 @@ import {
     where,
 } from '@angular/fire/firestore';
 import { IRoom } from '../models/IRoom';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable({
     providedIn: 'root',
@@ -45,7 +46,7 @@ export class RoomService implements OnDestroy {
 
     constructor() {
         // this.getRoomSnapShot();
-        this.room$.subscribe((room) => console.table(room));
+        this.room$.pipe(takeUntilDestroyed()).subscribe((room) => console.table(room));
         this.users$.subscribe((users) => console.table(users));
         this.votes$.subscribe((votes) => console.log('votes: ' + votes));
     }
@@ -132,6 +133,7 @@ export class RoomService implements OnDestroy {
                     '55',
                     '89',
                 ];
+
                 // get votes
                 // get votes from users, and distribute them compared to the voting options
                 // user vote is index of the voting options
@@ -237,6 +239,7 @@ export class RoomService implements OnDestroy {
         const ref = doc(this.firestore, 'rooms', roomCode);
         await getDoc(ref).then((doc) => {
             if (doc.exists()) {
+                this.room$.next(doc.data() as IRoom);
                 this.getRoomSnapShot(ref);
                 this.AddUserToRoom(ref, user);
             }

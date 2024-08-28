@@ -5,8 +5,13 @@
             {{score | async}}
         </div>
     }
+
+    @if((this.roomService.room$ | async).isVoteOpen){
+        <h1>Vote now</h1>
+    }
 </forge-card>
 
+@if(!(this.roomService.room$ | async).isVoteOpen){
 <forge-card raised>
     <!-- <img src="bar-chart.png" alt=""> -->
     <apx-chart
@@ -21,3 +26,4 @@
     [tooltip]="toolTip"
     ></apx-chart>
 </forge-card>
+}
